@@ -90,14 +90,32 @@ class PasswordField: UIControl {
         showHideButton.bottomAnchor.constraint(equalTo: textField.bottomAnchor, constant: -textFieldMargin).isActive = true
         
         // Password strength indicators
-        let weakView = UIView(frame: CGRect(x: 0, y: 0, width: 50, height: 5))
+        let weakView = UIView()
         weakView.translatesAutoresizingMaskIntoConstraints = false
-//        weakView.frame.size = colorViewSize
+        weakView.frame.size = colorViewSize
         weakView.backgroundColor = weakColor
         addSubview(weakView)
         
         weakView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: standardMargin).isActive = true
         weakView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: standardMargin).isActive = true
+        
+        let mediumView = UIView()
+        mediumView.translatesAutoresizingMaskIntoConstraints = false
+        mediumView.frame.size = colorViewSize
+        mediumView.backgroundColor = mediumColor
+        addSubview(mediumView)
+        
+        mediumView.leadingAnchor.constraint(equalTo: weakView.trailingAnchor, constant: 2).isActive = true
+        mediumView.centerYAnchor.constraint(equalTo: weakView.centerYAnchor).isActive = true
+        
+        let strongView = UIView()
+        strongView.translatesAutoresizingMaskIntoConstraints = false
+        strongView.frame.size = colorViewSize
+        strongView.backgroundColor = strongColor
+        addSubview(strongView)
+        
+        strongView.leadingAnchor.constraint(equalTo: mediumView.trailingAnchor, constant: 2).isActive = true
+        strongView.centerYAnchor.constraint(equalTo: mediumView.centerYAnchor).isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {

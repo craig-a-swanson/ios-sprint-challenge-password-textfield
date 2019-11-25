@@ -116,6 +116,17 @@ class PasswordField: UIControl {
         
         strongView.leadingAnchor.constraint(equalTo: mediumView.trailingAnchor, constant: 2).isActive = true
         strongView.centerYAnchor.constraint(equalTo: mediumView.centerYAnchor).isActive = true
+        
+        // Strength label
+        let strengthDescriptionLabel = UILabel()
+        strengthDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        strengthDescriptionLabel.text = "Too short"
+        strengthDescriptionLabel.textColor = labelTextColor
+        strengthDescriptionLabel.font = labelFont
+        addSubview(strengthDescriptionLabel)
+        
+        strengthDescriptionLabel.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: standardMargin).isActive = true
+        strengthDescriptionLabel.leadingAnchor.constraint(equalTo: strongView.trailingAnchor, constant: standardMargin).isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {

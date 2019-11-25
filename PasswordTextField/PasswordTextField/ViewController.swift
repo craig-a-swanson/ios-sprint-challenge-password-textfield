@@ -10,6 +10,12 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    @IBOutlet var passwordField: PasswordField!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    
     // For use in the stretch goal
     //
     // Uncomment this entire method, then run the app.

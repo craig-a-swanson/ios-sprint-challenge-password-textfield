@@ -54,9 +54,10 @@ class PasswordField: UIControl {
         // Password text field
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.borderStyle = .line
         textField.frame.size.height = textFieldContainerHeight
+        textField.layer.borderWidth = 1
         textField.layer.borderColor = textFieldBorderColor.cgColor
+        textField.returnKeyType = UIReturnKeyType.done
         addSubview(textField)
         
         textField.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: standardMargin).isActive = true
@@ -64,6 +65,11 @@ class PasswordField: UIControl {
         textField.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: standardMargin).isActive = true
         
         self.textField = textField
+        
+        // Show-hide button
+        let showHideButton = UIButton()
+        showHideButton.translatesAutoresizingMaskIntoConstraints = false
+        
         
 
     }

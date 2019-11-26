@@ -78,6 +78,7 @@ class PasswordField: UIControl {
         textField.isEnabled = true
         textField.becomeFirstResponder()
         textField.textContentType = .password
+        textField.isSecureTextEntry = true
         textField.returnKeyType = UIReturnKeyType.default
         addSubview(textField)
         
@@ -108,8 +109,7 @@ class PasswordField: UIControl {
         let weakView = UIView()
 //        let weakView = UIView(frame: CGRect(x: standardMargin, y: standardMargin * 3 + titleLabel.frame.height + textField.frame.height, width: colorViewSize.width, height: colorViewSize.height))
         weakView.translatesAutoresizingMaskIntoConstraints = false
-        weakView.frame = CGRect(x: standardMargin, y: standardMargin * 3 + titleLabel.frame.height + textField.frame.height, width: colorViewSize.width, height: colorViewSize.height)
-//        weakView.frame.size = colorViewSize
+        weakView.frame.size = colorViewSize
         weakView.backgroundColor = weakColor
         addSubview(weakView)
         
@@ -155,13 +155,25 @@ class PasswordField: UIControl {
     }
 
     
-    @objc func toggleButton() {
+    @objc func toggleButton(_ sender: UIButton) {
         if hiddenPassword {
             hiddenPassword = false
-            setup()
+            updateViews()
         } else {
             hiddenPassword = true
-            setup()
+            updateViews()
+        }
+    }
+    
+    func updateViews() {
+        if hiddenPassword {
+            let buttonImage = UIImage(named: "eyes-closed")
+            showHideButton.setImage(buttonImage, for: .normal)
+            textField.isSecureTextEntry = true
+        } else {
+            let buttonImage = UIImage(named: "eyes-open")
+            showHideButton.setImage(buttonImage, for: .normal)
+            textField.isSecureTextEntry = false
         }
     }
 }

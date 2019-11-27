@@ -192,6 +192,9 @@ class PasswordField: UIControl {
             textField.isSecureTextEntry = false
         }
     }
+    
+    // Function is called with each keystroke done in the text field.
+    // Looks at the length of the text field string and sets the strength bar color accordingly.
     @objc func strengthKey() {
         guard let length = textField.text?.count else { return }
         if length < 10 {

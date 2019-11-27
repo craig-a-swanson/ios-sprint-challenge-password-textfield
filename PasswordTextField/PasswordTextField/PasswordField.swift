@@ -58,6 +58,10 @@ class PasswordField: UIControl {
         setup()
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+    }
+    
     
     func setup() {
         // Enter password label
@@ -71,6 +75,8 @@ class PasswordField: UIControl {
         titleLabel.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: standardMargin).isActive = true
         titleLabel.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: standardMargin).isActive = true
         
+        self.titleLabel = titleLabel
+        
         // Password text field
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
@@ -81,7 +87,7 @@ class PasswordField: UIControl {
         textField.becomeFirstResponder()
         textField.isSecureTextEntry = true
         textField.returnKeyType = UIReturnKeyType.default
-//        textField.addTarget(self, action: #selector(textField()), for: UIControl.Event.editingChanged)
+        textField.addTarget(self, action: #selector(strengthKey), for: UIControl.Event.editingChanged)
         addSubview(textField)
         
         textField.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: standardMargin).isActive = true
@@ -186,12 +192,15 @@ class PasswordField: UIControl {
             textField.isSecureTextEntry = false
         }
     }
-    
-    func strength(_ length: Int) {
+    @objc func strengthKey() {
+        guard let length = textField.text?.count else { return }
         if length < 10 {
-            titleLabel.backgroundColor = .black
+            mediumView.layer.backgroundColor = unusedColor.cgColor
+            strongView.layer.backgroundColor = unusedColor.cgColor
+        } else if length < 20 {
+            mediumView.layer.backgroundColor = mediumColor.cgColor
         } else {
-            titleLabel.backgroundColor = .clear
+            strongView.layer.backgroundColor = strongColor.cgColor
         }
     }
 }
@@ -202,7 +211,6 @@ extension PasswordField: UITextFieldDelegate {
         let stringRange = Range(range, in: oldText)!
         let newText = oldText.replacingCharacters(in: stringRange, with: string)
         // TODO: send new text to the determine strength method
-        strength(newText.count)
         return true
     }
 }

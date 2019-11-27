@@ -18,7 +18,7 @@ enum strengthLevel {
 class PasswordField: UIControl {
     
     // Public API - these properties are used to fetch the final password and strength values
-    private var hiddenPassword = false
+    private var hiddenPassword = true
     private (set) var password: String = ""
     
     private let standardMargin: CGFloat = 8.0
@@ -39,7 +39,7 @@ class PasswordField: UIControl {
     private let strongColor = UIColor(hue: 132/360.0, saturation: 60/100.0, brightness: 75/100.0, alpha: 1)
     
     
-    // MARK: - UI Elements
+    // MARK: - UI Element Properties
     private var titleLabel: UILabel = UILabel()
     private var textField: UITextField = UITextField()
     private var showHideButton: UIButton = UIButton()
@@ -50,7 +50,6 @@ class PasswordField: UIControl {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-//        setup()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -58,11 +57,8 @@ class PasswordField: UIControl {
         setup()
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-    }
     
-    
+    // MARK: - Add UI Element Subviews
     func setup() {
         // Enter password label
         let titleLabel = UILabel()
@@ -84,7 +80,7 @@ class PasswordField: UIControl {
 //        textField.bounds.inset(by: UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4))
         textField.layer.borderWidth = 1
         textField.layer.borderColor = textFieldBorderColor.cgColor
-        textField.becomeFirstResponder()
+//        textField.becomeFirstResponder()
         textField.isSecureTextEntry = true
         textField.returnKeyType = UIReturnKeyType.default
         textField.addTarget(self, action: #selector(strengthKey), for: UIControl.Event.editingChanged)
@@ -98,7 +94,7 @@ class PasswordField: UIControl {
         
         
         // Show-hide button
-        let showHideButton = UIButton(type: .system)
+        let showHideButton = UIButton(type: .custom)
         showHideButton.translatesAutoresizingMaskIntoConstraints = false
 //        updateButtonImage()
         if hiddenPassword {
@@ -110,8 +106,9 @@ class PasswordField: UIControl {
             showHideButton.setImage(buttonImage, for: .normal)
             textField.isSecureTextEntry = false
         }
-        showHideButton.addTarget(self, action: #selector(toggleButton), for: .touchUpInside)
-        self.addSubview(showHideButton)
+        showHideButton.addTarget(self, action: #selector(self.toggleButton), for: .touchUpInside)
+        addSubview(showHideButton)
+
         
         showHideButton.trailingAnchor.constraint(equalTo: textField.trailingAnchor, constant: -standardMargin).isActive = true
         showHideButton.topAnchor.constraint(equalTo: textField.topAnchor, constant: textFieldMargin).isActive = true
@@ -170,7 +167,7 @@ class PasswordField: UIControl {
     }
 
     
-    @objc func toggleButton() {
+    @objc func toggleButton(sender: UIButton!) {
         print("Button was tapped")
         if hiddenPassword {
             hiddenPassword = false

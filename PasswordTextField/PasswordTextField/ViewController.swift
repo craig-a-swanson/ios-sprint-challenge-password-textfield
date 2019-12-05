@@ -10,10 +10,11 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    @IBOutlet var passwordField: PasswordField!
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    @IBAction func updatePassword(_ getPassword: PasswordField) {
+        let password = getPassword.password
+        let strength = getPassword.strength
+        
+        print("The password, \(password) is \(strength).")
     }
     
     // For use in the stretch goal

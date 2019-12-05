@@ -10,6 +10,13 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    @IBAction func updatePassword(_ getPassword: PasswordField) {
+        let password = getPassword.password
+        let strength = getPassword.strength
+        
+        print("The password, \(password) is \(strength).")
+    }
+    
     // For use in the stretch goal
     //
     // Uncomment this entire method, then run the app.

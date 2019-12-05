@@ -69,6 +69,7 @@ class PasswordField: UIControl {
     
     // MARK: - Add UI Element Subviews
     func setup() {
+        self.backgroundColor = bgColor
         // Enter password label
         addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -118,41 +119,54 @@ class PasswordField: UIControl {
         // Password strength indicators
         addSubview(weakView)
         weakView.translatesAutoresizingMaskIntoConstraints = false
-        weakView.frame = CGRect(x: 0, y: 50, width: colorViewSize.width, height: colorViewSize.height)
-        weakView.backgroundColor = weakColor
-        
-        weakView.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: standardMargin).isActive = true
-        weakView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: standardMargin).isActive = true
+        weakView.layer.backgroundColor = weakColor.cgColor
+        weakView.heightAnchor.constraint(equalToConstant: colorViewSize.height).isActive = true
+        weakView.widthAnchor.constraint(equalToConstant: colorViewSize.width).isActive = true
 
 
         addSubview(mediumView)
         mediumView.translatesAutoresizingMaskIntoConstraints = false
-        mediumView.frame = CGRect(x: 10, y: 50, width: colorViewSize.width, height: colorViewSize.height)
-        mediumView.backgroundColor = mediumColor
+        mediumView.layer.backgroundColor = unusedColor.cgColor
+        mediumView.heightAnchor.constraint(equalToConstant: colorViewSize.height).isActive = true
+        mediumView.widthAnchor.constraint(equalToConstant: colorViewSize.width).isActive = true
 
         mediumView.leadingAnchor.constraint(equalTo: weakView.trailingAnchor, constant: 2).isActive = true
-        mediumView.centerYAnchor.constraint(equalTo: weakView.centerYAnchor).isActive = true
 
 
         addSubview(strongView)
         strongView.translatesAutoresizingMaskIntoConstraints = false
-        strongView.frame.size = colorViewSize
-        strongView.layer.backgroundColor = strongColor.cgColor
+        strongView.layer.backgroundColor = unusedColor.cgColor
+        strongView.heightAnchor.constraint(equalToConstant: colorViewSize.height).isActive = true
+        strongView.widthAnchor.constraint(equalToConstant: colorViewSize.width).isActive = true
 
         strongView.leadingAnchor.constraint(equalTo: mediumView.trailingAnchor, constant: 2).isActive = true
-        strongView.centerYAnchor.constraint(equalTo: mediumView.centerYAnchor).isActive = true
 
         
         // Strength label
+        addSubview(strengthDescriptionLabel)
         strengthDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        strengthDescriptionLabel.text = "Too short"
+        strengthDescriptionLabel.text = "Too weak"
         strengthDescriptionLabel.textColor = labelTextColor
         strengthDescriptionLabel.font = labelFont
-        addSubview(strengthDescriptionLabel)
         
-//        strengthDescriptionLabel.centerYAnchor.constraint(equalTo: weakView.centerYAnchor).isActive = true
-        strengthDescriptionLabel.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: standardMargin).isActive = true
-        strengthDescriptionLabel.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -standardMargin).isActive = true
+        strengthDescriptionLabel.leadingAnchor.constraint(equalTo: strongView.trailingAnchor, constant: standardMargin).isActive = true
+        
+        let stackView = UIStackView()
+        addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        
+        stackView.addArrangedSubview(weakView)
+        stackView.addArrangedSubview(mediumView)
+        stackView.addArrangedSubview(strongView)
+        stackView.addArrangedSubview(strengthDescriptionLabel)
+        
+        NSLayoutConstraint.activate([
+            stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: standardMargin),
+            stackView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: standardMargin),
+            stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -standardMargin)
+        ])
     }
 
     

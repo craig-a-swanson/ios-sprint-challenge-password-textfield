@@ -49,10 +49,6 @@ class PasswordField: UIControl {
     private var strongView: UIView = UIView()
     private var strengthDescriptionLabel: UILabel = UILabel()
     
-//    override init(frame: CGRect) {
-//        super.init(frame: frame)
-//    }
-    
     override var intrinsicContentSize: CGSize {
         let height = standardMargin * 4 + labelFont.lineHeight + textFieldContainerHeight + strengthDescriptionLabel.font.lineHeight
         let width = UIScreen.main.bounds.width - standardMargin * 2 - CGFloat(10 * 2)
@@ -116,7 +112,7 @@ class PasswordField: UIControl {
         showHideButton.topAnchor.constraint(equalTo: textField.topAnchor, constant: textFieldMargin).isActive = true
         showHideButton.bottomAnchor.constraint(equalTo: textField.bottomAnchor, constant: -textFieldMargin).isActive = true
         
-        // Password strength indicators
+        // MARK: - Password strength indicators
         addSubview(weakView)
         weakView.translatesAutoresizingMaskIntoConstraints = false
         weakView.layer.backgroundColor = weakColor.cgColor
@@ -151,6 +147,7 @@ class PasswordField: UIControl {
         
         strengthDescriptionLabel.leadingAnchor.constraint(equalTo: strongView.trailingAnchor, constant: standardMargin).isActive = true
         
+        // Put the three strenght indicators and the strengthLabel into a horizontal stack view.
         let stackView = UIStackView()
         addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -169,7 +166,9 @@ class PasswordField: UIControl {
         ])
     }
 
+    // MARK: - Methods
     
+    // When the user taps the button, the text changes between hidden and shown, and the image on the button changes as well.
     @objc func toggleButton(sender: UIButton!) {
         if hiddenPassword {
             hiddenPassword.toggle()
@@ -183,17 +182,53 @@ class PasswordField: UIControl {
             textField.isSecureTextEntry = true
         }
     }
+    
+    // Count the characters that the user has typed into the text field and set the strength indicators based on the number of characters. The value changes to medium at 10 and to strong at 16. A brief animation is done at those points.
+    private func setStrength(_ password: String) {
+        let length = password.count
+        switch length {
+        case 0...9:
+            self.strength = .weak
+            mediumView.layer.backgroundColor = unusedColor.cgColor
+            strongView.layer.backgroundColor = unusedColor.cgColor
+            strengthDescriptionLabel.text = "Too Weak"
+        case 10:
+            self.strength = .medium
+            mediumView.layer.backgroundColor = mediumColor.cgColor
+            strongView.layer.backgroundColor = unusedColor.cgColor
+            strengthDescriptionLabel.text = "Medium Strength"
+            mediumView.performFlare()
+        case 11...15:
+            self.strength = .medium
+            mediumView.layer.backgroundColor = mediumColor.cgColor
+            strongView.layer.backgroundColor = unusedColor.cgColor
+            strengthDescriptionLabel.text = "Medium Strength"
+        case 16:
+            self.strength = .strong
+            mediumView.layer.backgroundColor = mediumColor.cgColor
+            strongView.layer.backgroundColor = strongColor.cgColor
+            strengthDescriptionLabel.text = "Strong Password"
+            strongView.performFlare()
+        default:
+            self.strength = .strong
+            mediumView.layer.backgroundColor = mediumColor.cgColor
+            strongView.layer.backgroundColor = strongColor.cgColor
+            strengthDescriptionLabel.text = "Strong Password"
+        }
+    }
 }
 
+// MARK: - Extensions
 extension PasswordField: UITextFieldDelegate {
      func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let oldText = textField.text!
         let stringRange = Range(range, in: oldText)!
         let newText = oldText.replacingCharacters(in: stringRange, with: string)
-        // TODO: send new text to the determine strength method
+        setStrength(newText)
         return true
     }
     
+    // when the return key is pressed, the password property is set to the current text field and the valuechanged event is given.
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.endEditing(true)
         if let newPassword = textField.text,
@@ -205,3 +240,16 @@ extension PasswordField: UITextFieldDelegate {
     }
     
 }
+
+// extension is used to briefly expand the height of the strength bar
+extension UIView {
+    func performFlare() {
+      func flare()   { transform = CGAffineTransform(scaleX: 1.0, y: 1.75) }
+      func unflare() { transform = .identity }
+      
+      UIView.animate(withDuration: 0.1,
+                     animations: { flare() },
+                     completion: { _ in UIView.animate(withDuration: 0.1) { unflare() }})
+    }
+}
+

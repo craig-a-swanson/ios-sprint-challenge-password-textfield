@@ -87,8 +87,11 @@ class PasswordField: UIControl {
         textField.layer.borderColor = textFieldBorderColor.cgColor
         textField.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         textField.placeholder = "Type in a password"
-        textField.isSecureTextEntry = true
-//        textField.addTarget(self, action: #selector(strengthKey), for: UIControl.Event.editingChanged)
+        if hiddenPassword {
+            textField.isSecureTextEntry = true
+        } else {
+            textField.isSecureTextEntry = false
+        }
         
         textField.heightAnchor.constraint(equalToConstant: textFieldContainerHeight).isActive = true
         textField.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: standardMargin).isActive = true
@@ -98,19 +101,15 @@ class PasswordField: UIControl {
         
         // Show-hide button
         showHideButton.translatesAutoresizingMaskIntoConstraints = false
-//        updateButtonImage()
         if hiddenPassword {
             let buttonImage = UIImage(named: "eyes-closed")
             showHideButton.setImage(buttonImage, for: .normal)
-            textField.isSecureTextEntry = true
         } else {
             let buttonImage = UIImage(named: "eyes-open")
             showHideButton.setImage(buttonImage, for: .normal)
-            textField.isSecureTextEntry = false
         }
         showHideButton.addTarget(self, action: #selector(self.toggleButton), for: .touchUpInside)
         addSubview(showHideButton)
-
         
         showHideButton.trailingAnchor.constraint(equalTo: textField.trailingAnchor, constant: -standardMargin).isActive = true
         showHideButton.topAnchor.constraint(equalTo: textField.topAnchor, constant: textFieldMargin).isActive = true
@@ -168,20 +167,6 @@ class PasswordField: UIControl {
             let buttonImage = UIImage(named: "eyes-closed")
             showHideButton.setImage(buttonImage, for: .normal)
             textField.isSecureTextEntry = true
-        }
-    }
-    
-    // Function is called with each keystroke done in the text field.
-    // Looks at the length of the text field string and sets the strength bar color accordingly.
-    @objc func strengthKey() {
-        guard let length = textField.text?.count else { return }
-        if length < 10 {
-            mediumView.layer.backgroundColor = unusedColor.cgColor
-            strongView.layer.backgroundColor = unusedColor.cgColor
-        } else if length < 20 {
-            mediumView.layer.backgroundColor = mediumColor.cgColor
-        } else {
-            strongView.layer.backgroundColor = strongColor.cgColor
         }
     }
 }
